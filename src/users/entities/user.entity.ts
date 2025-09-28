@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { CodeReview } from '../../code-analysis/entities/code-review.entity';
 import { RefreshToken } from '../../auth/entities/refresh-token.entity';
-// Remove CodeReview import and relationship for now
 
 @Entity('users')
 export class User {
@@ -27,9 +27,8 @@ export class User {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  // Remove CodeReview relationship for now
-  // @OneToMany(() => CodeReview, codeReview => codeReview.user)
-  // codeReviews: CodeReview[];
+  @OneToMany(() => CodeReview, codeReview => codeReview.user) // Add back
+  codeReviews: CodeReview[];
 
   @OneToMany(() => RefreshToken, refreshToken => refreshToken.user)
   refreshTokens: RefreshToken[];

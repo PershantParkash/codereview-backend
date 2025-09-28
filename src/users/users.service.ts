@@ -66,19 +66,20 @@ export class UsersService {
     return this.usersRepository.save(user);
   }
 
-  async getUserStats(userId: string): Promise<any> {
-    const user = await this.usersRepository.findOne({
-      where: { id: userId },
-    });
+ async getUserStats(userId: string): Promise<any> {
+  const user = await this.usersRepository
+    .createQueryBuilder('user')
+    .leftJoinAndSelect('user.codeReviews', 'reviews')
+    .where('user.id = :userId', { userId })
+    .getOne();
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    // Return basic stats for now, we'll add code review stats later
-    return {
-      totalReviews: 0, // Will be updated when we add code reviews
-      subscriptionType: user.subscriptionType,
-    };
+  if (!user) {
+    throw new NotFoundException('User not found');
   }
+
+  return {
+    totalReviews: user.codeReviews?.length || 0,
+    subscriptionType: user.subscriptionType,
+  };
+}
 }

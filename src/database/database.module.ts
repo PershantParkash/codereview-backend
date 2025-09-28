@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from '../users/entities/user.entity';
+import { CodeReview } from '../code-analysis/entities/code-review.entity';
 import { RefreshToken } from '../auth/entities/refresh-token.entity';
-// Remove CodeReview import for now
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { RefreshToken } from '../auth/entities/refresh-token.entity';
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [User, RefreshToken], // Remove CodeReview for now
+        entities: [User, CodeReview, RefreshToken], // Add CodeReview back
         synchronize: configService.get('NODE_ENV') === 'development',
         logging: configService.get('NODE_ENV') === 'development',
       }),

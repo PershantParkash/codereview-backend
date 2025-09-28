@@ -4,12 +4,13 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { AiIntegrationModule } from './ai-integration/ai-integration.module'; // Add this
+import { CodeAnalysisModule } from './code-analysis/code-analysis.module'; // Add this
 import { AppController } from './app.controller';
 import * as Joi from 'joi';
 
 @Module({
   imports: [
-    // Configuration with validation
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -26,10 +27,11 @@ import * as Joi from 'joi';
         PORT: Joi.number().default(3001),
         NODE_ENV: Joi.string().valid('development', 'production', 'test').default('development'),
         FRONTEND_URL: Joi.string().default('http://localhost:3000'),
+        OPENAI_API_KEY: Joi.string().optional(), // Add these as optional
+        CLAUDE_API_KEY: Joi.string().optional(),
       }),
     }),
     
-    // Rate limiting
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
@@ -37,12 +39,11 @@ import * as Joi from 'joi';
       },
     ]),
     
-    // Database
     DatabaseModule,
-    
-    // Feature modules
     AuthModule,
     UsersModule,
+    AiIntegrationModule,      // Add this
+    CodeAnalysisModule,       // Add this
   ],
   controllers: [AppController],
   providers: [],
